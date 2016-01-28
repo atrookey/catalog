@@ -6,6 +6,10 @@
 //  Copyright © 2016 Alexander Rookey. All rights reserved.
 //
 
+#include <menu.h>
+#include <catalog.h>
+#include <sqlite3.h>
+
 void addItem()
 {
   return;
@@ -21,12 +25,13 @@ void deleteItem()
   return;
 }
 
-void getItem()
+ITEM* getItem()
 {
-  return;
+  return NULL;
 }
 
-void getItems()
+ITEM** getItems()
 {
-  return;
+  new_item("item name", "item description");
+  return NULL;
 }

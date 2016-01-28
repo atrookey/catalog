@@ -9,5 +9,5 @@
 void addItem(void);
 void editItem(void);
 void deleteItem(void);
-void getItem(void);
-void getItems(void);
+ITEM* getItem(void);
+ITEM** getItems(void);
