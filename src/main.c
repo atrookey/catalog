@@ -10,8 +10,8 @@
 #include <menu.h>
 #include <form.h>
 #include <unistd.h>
-#include <catalog.h>
 #include <sqlite3.h>
+#include <catalog.h>
 
 #define DBNAME "rookey_catalog"
 
@@ -28,20 +28,15 @@ int main(int argc, const char * argv[])
     sqlite3_close(db);
     return(1);
   }
-  // rc = sqlite3_exec(db, );
-  // if (rc!=SQLITE_OK){
-  //   fprintf(stderr, "SQL error: %s\n", zErrMsg);
-  //   sqlite3_free(zErrMsg);
-  // }
   
   // init ncurses
   initscr(); cbreak(); noecho();
   keypad(stdscr, TRUE);
-  ITEM** items;
+  ITEM** books;
   for(int i = 0; i < 9; i++) {
-    items = getItems();
+    books = get_items(db);
   }
-  MENU *menu = new_menu(items);
+  MENU *menu = new_menu(books);
   int err = post_menu(menu);
   refresh();
 
@@ -60,9 +55,9 @@ int main(int argc, const char * argv[])
     }
   }
 
-  unpost_menu(menu);
-  for(int i = 0; i < 9; i++) {
-    free_item(items[i]);
-  }
+  // unpost_menu(menu);
+  // for(int i = 0; i < 9; i++) {
+  //   free_item(items[i]);
+  // }
   return endwin();
 }
