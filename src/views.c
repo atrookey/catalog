@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <menu.h>
 #include <form.h>
 #include <unistd.h>
@@ -32,7 +33,7 @@ int list_view(sqlite3 *db)
       case KEY_UP:
         menu_driver(menu, REQ_PREV_ITEM);
         break;
-      case 10: // ENTER key
+      case KEY_LINE_FEED: // ENTER key
         selected_book = current_item(menu);
         
         // free up memory here!
@@ -99,6 +100,7 @@ int new_book_view(sqlite3* db)
   FORM  *form;
   FIELD *fields[2*NUMCOLUMNS+1]; // roughly 25
   fields[2*NUMCOLUMNS] = NULL; // roughly index 24
+  struct book new_book;
   
   for (int i = 0; i<2*NUMCOLUMNS; i++) {
 
@@ -113,18 +115,24 @@ int new_book_view(sqlite3* db)
     fields[i] = new_field(1, 40, i, 0, 0, 0);
 
     /* Set field options */
-    set_field_back(fields[i], A_UNDERLINE);  /* Print a line for the option  */
+    set_field_back(fields[i], A_REVERSE);  /* Print a line for the option  */
     field_opts_off(fields[i], O_AUTOSKIP);   /* Don't go to next field when this */
                                              /* Field is filled up     */
   }
+
+  // idk why I'm including ID but it should be inactive
+  field_opts_off(fields[(2*ID)+1], O_ACTIVE); /* This field is a static label */
+  set_field_buffer(fields[(2*ID)+1], 0, "AUTO");
 
   form = new_form(fields);
   post_form(form);
   refresh();
 
   // input loop
+  // there should be a better way to do ALL this.  Look at Insert mode
   while((c = getch()) != KEY_F(1)) {
     switch(c) {
+      
       case KEY_RIGHT:
       case KEY_DOWN:
 
@@ -132,6 +140,7 @@ int new_book_view(sqlite3* db)
         form_driver(form, REQ_NEXT_FIELD);
         form_driver(form, REQ_END_LINE);
         break;
+      
       case KEY_LEFT:
       case KEY_UP:
 
@@ -139,6 +148,32 @@ int new_book_view(sqlite3* db)
         form_driver(form, REQ_PREV_FIELD);
         form_driver(form, REQ_END_LINE);
         break;
+
+      case KEY_LINE_FEED: // Enter key
+        new_book = (struct book) {
+            field_buffer(fields[(2*CALLNUMBER)+1],0),
+            field_buffer(fields[(2*AUTHOR)+1],0),
+            field_buffer(fields[(2*TITLE)+1],0),
+            field_buffer(fields[(2*EDITION)+1],0),
+            field_buffer(fields[(2*PUBLICATIONLOCATION)+1],0),
+            field_buffer(fields[(2*PUBLISHER)+1],0),
+            atoi(field_buffer(fields[(2*PUBLICATIONDATE)+1],0)),
+            field_buffer(fields[(2*SERIESTITLE)+1],0),
+            field_buffer(fields[(2*NOTES)+1],0),
+            atoi(field_buffer(fields[(2*ISBN)+1],0)),
+            field_buffer(fields[(2*SUBJECT)+1],0)};
+        
+        add_item(&new_book);  // fails silently? :(
+        
+        // free up memory here!
+        unpost_form(form);
+        return 0;
+        break;
+
+      case KEY_DELETE:
+        form_driver(form, REQ_DEL_PREV);
+        break;
+
       default:
 
         /* If this is a normal character, it gets */

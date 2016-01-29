@@ -10,6 +10,6 @@ CREATE TABLE books
   publication_date INTEGER,
   series_title TEXT,
   notes TEXT,
-  isbn TEXT,
+  isbn INTEGER,
   subject TEXT
 );

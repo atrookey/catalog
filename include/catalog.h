@@ -37,6 +37,20 @@ struct items_builder {
   ITEM** items;
 };
 
+struct book {
+  char* call_number;
+  char* author;
+  char* title;
+  char* edition;
+  char* publication_location;
+  char* publisher;
+  int publication_date;
+  char* series_title;
+  char* notes;
+  int isbn;
+  char* subject;
+};
+
 
 void init_book_columns(void);
 

@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void add_item()
+void add_item(struct book* new_book)
 {
   return;
 }
