@@ -11,6 +11,7 @@
 #include <form.h>
 #include <unistd.h>
 #include <sqlite3.h>
+#include <views.h>
 #include <catalog.h>
 
 #define DBNAME "rookey_catalog"
@@ -20,6 +21,7 @@ int main(int argc, const char * argv[])
   int rc;
   char *zErrMsg = NULL;
   sqlite3 *db;
+  WINDOW *my_menu_win;
 
   // init database 
   rc = sqlite3_open(DBNAME, &db);
@@ -28,36 +30,26 @@ int main(int argc, const char * argv[])
     sqlite3_close(db);
     return(1);
   }
-  
+
   // init ncurses
   initscr(); cbreak(); noecho();
   keypad(stdscr, TRUE);
-  ITEM** books;
-  for(int i = 0; i < 9; i++) {
-    books = get_items(db);
-  }
-  MENU *menu = new_menu(books);
-  int err = post_menu(menu);
-  refresh();
+  init_pair(1, COLOR_RED, COLOR_BLACK);
 
-  // input loop
-  for (;;) {
-    int c = getch();
-    switch(c) {
-      case KEY_RIGHT:
-      case KEY_DOWN:
-        menu_driver(menu, REQ_NEXT_ITEM);
-        break;
-      case KEY_LEFT:
-      case KEY_UP:
-        menu_driver(menu, REQ_PREV_ITEM);
-        break;
-    }
-  }
+  /* Create the window to be associated with the menu */
+  my_menu_win = newwin(10, 40, 4, 4);
+  keypad(my_menu_win, TRUE);
 
-  // unpost_menu(menu);
+  // init book columns
+  init_book_columns();
+
+  // open main page
+  list_view(db, my_menu_win);
+
+  // cleanup:  unpost_menu(menu);
   // for(int i = 0; i < 9; i++) {
-  //   free_item(items[i]);
+  //   free_item(books[i]);
   // }
+  // endwin();
   return endwin();
 }
