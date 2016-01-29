@@ -54,6 +54,7 @@ static int _select_all_where_id_callback(void* untyped_items, int argc,
     fprintf(stderr, "Umm so argc is %d\n", argc);
     return 1;
   }
+
   // items = (ITEM***) untyped_items;
   items = malloc(sizeof(ITEM*)*argc+1);
   items[argc] = NULL;

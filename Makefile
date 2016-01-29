@@ -1,2 +1,2 @@
 all:
-	gcc -lsqlite3 -lmenu -lcurses -g src/* -I include -o catalog	
+	gcc -lsqlite3 -lform -lmenu -lcurses -g src/* -I include -o rcat

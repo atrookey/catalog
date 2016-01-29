@@ -37,9 +37,12 @@ struct items_builder {
   ITEM** items;
 };
 
+
+void init_book_columns(void);
+
+// accessors/mutators
 void add_item(void);
 void edit_item(void);
 void delete_item(void);
-void init_book_columns(void);
 ITEM** get_item_info(sqlite3*, int);
 ITEM** get_items(sqlite3*);
