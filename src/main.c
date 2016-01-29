@@ -14,7 +14,7 @@
 #include <views.h>
 #include <catalog.h>
 
-#define DBNAME "rookey_catalog"
+#define DBNAME "/Users/alexander/Development/rookey_catalog/rookey_catalog"
 
 int main(int argc, const char * argv[])
 {
@@ -34,17 +34,12 @@ int main(int argc, const char * argv[])
   // init ncurses
   initscr(); cbreak(); noecho();
   keypad(stdscr, TRUE);
-  init_pair(1, COLOR_RED, COLOR_BLACK);
-
-  /* Create the window to be associated with the menu */
-  my_menu_win = newwin(10, 40, 4, 4);
-  keypad(my_menu_win, TRUE);
 
   // init book columns
   init_book_columns();
 
   // open main page
-  list_view(db, my_menu_win);
+  list_view(db);
 
   // cleanup:  unpost_menu(menu);
   // for(int i = 0; i < 9; i++) {
