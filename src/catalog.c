@@ -12,9 +12,29 @@
 #include <stdlib.h>
 #include <string.h>
 
-void add_item(struct book* new_book)
+static int _insert_values_callback(void* NOTUSED, int argc, char **argv,
+    char **azColName)
 {
-  return;
+  return 0;
+}
+
+void add_item(sqlite3 *db, struct book* new_book)
+{
+  int rc;
+  char *zErrMsg = NULL;
+  char sql[BUFSIZ];
+
+  sprintf(sql, "%s ('%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', %d, '%s');", 
+      INSERTVALUES, new_book -> call_number, new_book -> author,
+      new_book -> title, new_book -> edition, new_book -> publication_location,
+      new_book -> publisher, new_book -> publication_date,
+      new_book -> series_title, new_book -> notes, new_book -> isbn,
+      new_book -> subject);
+  rc = sqlite3_exec(db, sql, _insert_values_callback, NULL, &zErrMsg);
+  if (rc!=SQLITE_OK) {
+    fprintf(stderr, "SQL error: %s\n", zErrMsg);
+    sqlite3_free(zErrMsg);
+  }
 }
 
 void edit_item()

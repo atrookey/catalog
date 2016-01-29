@@ -128,6 +128,10 @@ int new_book_view(sqlite3* db)
   post_form(form);
   refresh();
 
+  // both the publication date and isbn should be integers
+  set_field_type(fields[(2*PUBLICATIONDATE)+1], TYPE_INTEGER, 0, 0, 0);
+  set_field_type(fields[(2*ISBN)+1], TYPE_INTEGER, 0, 0, 0);
+
   // input loop
   // there should be a better way to do ALL this.  Look at Insert mode
   while((c = getch()) != KEY_F(1)) {
@@ -163,7 +167,7 @@ int new_book_view(sqlite3* db)
             atoi(field_buffer(fields[(2*ISBN)+1],0)),
             field_buffer(fields[(2*SUBJECT)+1],0)};
         
-        add_item(&new_book);  // fails silently? :(
+        add_item(db, &new_book);  // fails silently? :(
         
         // free up memory here!
         unpost_form(form);
@@ -176,8 +180,7 @@ int new_book_view(sqlite3* db)
 
       default:
 
-        /* If this is a normal character, it gets */
-        /* Printed          */  
+        /* If this is a normal character, it gets printed */
         form_driver(form, c);
         break;
     }

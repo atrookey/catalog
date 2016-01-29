@@ -10,6 +10,7 @@
 #define SELECTALL "SELECT * FROM books;"
 #define COUNTALL "SELECT COUNT(*) FROM books;"
 #define SELECTALLWHEREID "SELECT * FROM books WHERE ID="
+#define INSERTVALUES "INSERT INTO books (call_number, author, title, edition, publication_location, publisher, publication_date, series_title, notes, isbn, subject) VALUES"
 
 // Columns
 #define NUMCOLUMNS 12
@@ -55,7 +56,7 @@ struct book {
 void init_book_columns(void);
 
 // accessors/mutators
-void add_item(void);
+void add_item(sqlite3*, struct book*);
 void edit_item(void);
 void delete_item(void);
 ITEM** get_item_info(sqlite3*, int);
