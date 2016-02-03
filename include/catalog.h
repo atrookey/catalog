@@ -6,11 +6,17 @@
 //  Copyright © 2016 Alexander Rookey. All rights reserved.
 //
 
-// Queries
+// Paths
+#define DBNAME "/Users/alexander/Development/rookey_catalog/rookey_catalog"
+
+// Sql
 #define SELECTALL "SELECT * FROM books;"
 #define COUNTALL "SELECT COUNT(*) FROM books;"
 #define SELECTALLWHEREID "SELECT * FROM books WHERE ID="
-#define INSERTVALUES "INSERT INTO books (call_number, author, title, edition, publication_location, publisher, publication_date, series_title, notes, isbn, subject) VALUES"
+#define INSERTVALUES "INSERT INTO books " \
+    "(call_number, author, title, edition, publication_location, publisher, " \
+    "publication_date, series_title, notes, isbn, subject)" \
+    "VALUES"
 
 // Columns
 #define NUMCOLUMNS 12
@@ -30,34 +36,57 @@
 // Other
 #define NULLVALUE "NULL"
 
-char** index_id_map;
-char* book_columns[NUMCOLUMNS];
+static char** index_id_map;
+static char* book_columns[NUMCOLUMNS];
+static sqlite3 *db;
 
+// I wish I could get rid of this struct
 struct items_builder {
   int count;
   ITEM** items;
 };
 
-struct book {
-  char* call_number;
-  char* author;
-  char* title;
-  char* edition;
-  char* publication_location;
-  char* publisher;
-  int publication_date;
-  char* series_title;
-  char* notes;
-  int isbn;
-  char* subject;
-};
-
-
+int init_catalog(void);
 void init_book_columns(void);
 
-// accessors/mutators
-void add_item(sqlite3*, struct book*);
-void edit_item(void);
-void delete_item(void);
-ITEM** get_item_info(sqlite3*, int);
-ITEM** get_items(sqlite3*);
+// hooks
+void init_main_menu(MENU*);
+void term_main_menu(MENU*);
+
+void init_book_menu(MENU*);
+void term_book_menu(MENU*);
+
+void init_new_book_form(FORM*);
+void term_new_book_form(FORM*);
+
+void init_edit_book_form(FORM*);
+void term_edit_book_form(FORM*);
+
+// void delete_item(void); // idk yet
+
+// // __ Main Menu __
+// // Enter main menu
+// ITEM** get_items(MENU*); // set_menu_init
+
+// // Exit main menu
+// ITEM* get_current_item(MENU*); // set_menu_term
+// int set_current_id(ITEM*); // global current_id variable?
+
+// // __ Book Menu __
+// // Enter book menu
+// ITEM** get_item_info(MENU*);  // set_menu_init
+
+// // Exit book menu
+// void 
+
+// // __ New Book Form __
+// // Enter new book form
+
+// // Exit new book form
+// void add_item();  // set_form_term
+
+// // __ Edit Book Form __
+// // Enter edit book form
+
+// // Exit edit book form
+// void edit_item(void); // set_form_term

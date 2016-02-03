@@ -7,7 +7,13 @@
 #include <catalog.h>
 #include <views.h>
 
-int list_view(sqlite3 *db)
+void init_views()
+{
+  initscr(); cbreak(); noecho();
+  keypad(stdscr, TRUE);
+}
+
+int list_view()
 {
   int err;
   int c;

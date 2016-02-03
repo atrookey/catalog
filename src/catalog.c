@@ -12,13 +12,32 @@
 #include <stdlib.h>
 #include <string.h>
 
+// database db should be static in this file.  That way I don't have to pass it
+// around and it will make hooking into my forms easier
+
+int init_catalog()
+{
+  int rc;
+
+  // init database 
+  rc = sqlite3_open(DBNAME, &db);
+  if (rc){
+    fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+    sqlite3_close(db);
+    return(1);
+  }
+  init_book_columns();
+}
+
 static int _insert_values_callback(void* NOTUSED, int argc, char **argv,
     char **azColName)
 {
   return 0;
 }
 
-void add_item(sqlite3 *db, struct book* new_book)
+// this is gonna be turned into a hook that takes in a form
+// db is now global
+void add_item()
 {
   int rc;
   char *zErrMsg = NULL;
@@ -89,7 +108,7 @@ static int _select_all_where_id_callback(void* untyped_items, int argc,
   return 0;
 }
 
-ITEM** get_item_info(sqlite3 *db, int index)
+ITEM** get_item_info(int index)
 {
   char* id;
   int rc;
@@ -142,7 +161,7 @@ static int _select_all_callback(void* untyped_items_builder, int argc,
   return 0;
 }
 
-ITEM** get_items(sqlite3 *db)
+ITEM** get_items()
 {
   int rc;
   char *zErrMsg = NULL;
